@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UserConfig>
+    <!-- ================================================================= -->
+    <!-- 1. GENERAL SETTINGS                                               -->
+    <!-- ================================================================= -->
+    <Group id="CutscenePTGeneral" displayName="Mods.CutscenePT.CutscenePT_General">
+        <VisibleVars>
+            <!-- Master Toggle -->
+            <Var id="ModEnabled" displayName="ModEnabled" displayType="TOGGLE"/>
+
+            <!-- On-screen feedback when mode engages -->
+            <Var id="ShowNotifications" displayName="ShowNotifications" displayType="TOGGLE"/>
+
+            <!-- Internal Version Marker -->
+            <Var id="VersionNr" displayName="" displayType="SLIDER;0;50;50000" visibilityCondition="hideAlways"/>
+        </VisibleVars>
+    </Group>
+
+    <!-- ================================================================= -->
+    <!-- 2. DIALOGUE SETTINGS                                              -->
+    <!-- ================================================================= -->
+    <Group id="CutscenePTDialogs" displayName="Mods.CutscenePT.CutscenePT_Dialogs">
+        <PresetsArray>
+            <Preset id="0" displayName="PresetFullPT">
+                <Entry varId="Dialog_Enabled" value="true"/>
+                <Entry varId="Dialog_EnableRT" value="true"/>
+                <Entry varId="Dialog_PTEnable" value="true"/>
+                <Entry varId="Dialog_RTGIPreset" value="true"/>
+                <Entry varId="Dialog_EnableRtRadiance" value="true"/>
+                <Entry varId="Dialog_Shadows" value="2"/>
+                <Entry varId="Dialog_RTAOEnabled" value="true"/>
+                <Entry varId="Dialog_AAMode" value="6"/>
+                <Entry varId="Dialog_DLSSQuality" value="0"/>
+                <Entry varId="Dialog_EnableDLSSRR" value="true"/>
+                <Entry varId="Dialog_FSR2Quality" value="0"/>
+                <Entry varId="Dialog_XESSQuality" value="0"/>
+                <Entry varId="Dialog_DRSEnable" value="false"/>
+                <Entry varId="Dialog_HairWorksLevel" value="0"/>
+                <Entry varId="Dialog_PTHairQualityMode" value="0"/>
+                <Entry varId="Dialog_HairWorksAALevel" value="0"/>
+                <Entry varId="Dialog_HairWorksQualityPreset" value="0"/>
+            </Preset>
+            <Preset id="1" displayName="PresetPTGI">
+                <Entry varId="Dialog_Enabled" value="true"/>
+                <Entry varId="Dialog_EnableRT" value="true"/>
+                <Entry varId="Dialog_PTEnable" value="true"/>
+                <Entry varId="Dialog_RTGIPreset" value="false"/>
+                <Entry varId="Dialog_EnableRtRadiance" value="false"/>
+                <Entry varId="Dialog_Shadows" value="0"/>
+                <Entry varId="Dialog_RTAOEnabled" value="false"/>
+                <Entry varId="Dialog_AAMode" value="6"/>
+                <Entry varId="Dialog_DLSSQuality" value="0"/>
+                <Entry varId="Dialog_EnableDLSSRR" value="false"/>
+                <Entry varId="Dialog_FSR2Quality" value="0"/>
+                <Entry varId="Dialog_XESSQuality" value="0"/>
+                <Entry varId="Dialog_DRSEnable" value="false"/>
+                <Entry varId="Dialog_HairWorksLevel" value="0"/>
+                <Entry varId="Dialog_PTHairQualityMode" value="0"/>
+                <Entry varId="Dialog_HairWorksAALevel" value="0"/>
+                <Entry varId="Dialog_HairWorksQualityPreset" value="0"/>
+            </Preset>
+            <Preset id="2" displayName="PresetFullRT">
+                <Entry varId="Dialog_Enabled" value="true"/>
+                <Entry varId="Dialog_EnableRT" value="true"/>
+                <Entry varId="Dialog_PTEnable" value="false"/>
+                <Entry varId="Dialog_RTGIPreset" value="true"/>
+                <Entry varId="Dialog_EnableRtRadiance" value="true"/>
+                <Entry varId="Dialog_Shadows" value="2"/>
+                <Entry varId="Dialog_RTAOEnabled" value="true"/>
+                <Entry varId="Dialog_AAMode" value="6"/>
+                <Entry varId="Dialog_DLSSQuality" value="0"/>
+                <Entry varId="Dialog_EnableDLSSRR" value="false"/>
+                <Entry varId="Dialog_FSR2Quality" value="0"/>
+                <Entry varId="Dialog_XESSQuality" value="0"/>
+                <Entry varId="Dialog_DRSEnable" value="false"/>
+                <Entry varId="Dialog_HairWorksLevel" value="0"/>
+                <Entry varId="Dialog_PTHairQualityMode" value="0"/>
+                <Entry varId="Dialog_HairWorksAALevel" value="0"/>
+                <Entry varId="Dialog_HairWorksQualityPreset" value="0"/>
+            </Preset>
+        </PresetsArray>
+        <VisibleVars>
+            <!-- Toggle for Dialogues -->
+            <Var id="Dialog_Enabled" displayName="Dialog_Enabled" displayType="TOGGLE"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- DLSS5 (OptiScaler) -->
+            <Var id="Dialog_DLSSNR" displayName="DLSS5_OptiScaler" displayType="TOGGLE" tags="customDisplayName"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- Ray Tracing Section (Exact replica of graphics.xml) -->
+            <Var id="Dialog_EnableRT" displayName="preset_value_rt" displayType="TOGGLE" tags="customDisplayName;customPresetIfChanged;enableIfRTSupported"/>
+            <Var id="Dialog_PTEnable" displayName="option_rt_enable_path_tracer" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <!-- RT GI Preset -->
+            <Var id="Dialog_RTGIPreset" displayName="option_rt_global_illumination" displayType="OPTIONS" tags="customNames;customDisplayName;indent;customPresetIfChanged;enableIfRTSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_perf">
+                        <Entry varId="Dialog_RTGIPreset" value="false"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_quality">
+                        <Entry varId="Dialog_RTGIPreset" value="true"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- RT Reflections -->
+            <Var id="Dialog_EnableRtRadiance" displayName="enable_rt_radiance" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <!-- RT Shadows -->
+            <Var id="Dialog_Shadows" displayName="enable_rt_shadows" displayType="OPTIONS" tags="customNames;indent;customPresetIfChanged;enableIfRTSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Dialog_Shadows" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_perf">
+                        <Entry varId="Dialog_Shadows" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_quality">
+                        <Entry varId="Dialog_Shadows" value="2"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- RT Ambient Occlusion -->
+            <Var id="Dialog_RTAOEnabled" displayName="option_rt_ambient_occlusion" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- Anti Aliasing / Upscaling Section (Exact replica of graphics.xml) -->
+            <Var id="Dialog_AAMode" displayName="allow_Antialias" displayType="OPTIONS" tags="customNames;nonLocalizedExceptFirst">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Dialog_AAMode" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="FXAA">
+                        <Entry varId="Dialog_AAMode" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="AMD FSR Upscaling">
+                        <Entry varId="Dialog_AAMode" value="5"/>
+                    </Option>
+                    <Option id="3" displayName="XeSS">
+                        <Entry varId="Dialog_AAMode" value="7"/>
+                    </Option>
+                    <Option id="4" displayName="DLSS">
+                        <Entry varId="Dialog_AAMode" value="6"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- FSR Quality -->
+            <Var id="Dialog_FSR2Quality" displayName="fsr_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Dialog_FSR2Quality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="option_nativeaa" tags="enableIfFSR4">
+                        <Entry varId="Dialog_FSR2Quality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_quality">
+                        <Entry varId="Dialog_FSR2Quality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="dlss_balanced">
+                        <Entry varId="Dialog_FSR2Quality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_perf">
+                        <Entry varId="Dialog_FSR2Quality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="dlss_ultraperf">
+                        <Entry varId="Dialog_FSR2Quality" value="5"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- DLSS Quality -->
+            <Var id="Dialog_DLSSQuality" displayName="dlss_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Dialog_DLSSQuality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_quality">
+                        <Entry varId="Dialog_DLSSQuality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_balanced">
+                        <Entry varId="Dialog_DLSSQuality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="dlss_perf">
+                        <Entry varId="Dialog_DLSSQuality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_ultraperf">
+                        <Entry varId="Dialog_DLSSQuality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="option_dlss_dlaa">
+                        <Entry varId="Dialog_DLSSQuality" value="5"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- DLSS Ray Reconstruction -->
+            <Var id="Dialog_EnableDLSSRR" displayName="dlss_r" displayType="TOGGLE" tags="customNames;indent;customPresetIfChanged;enableIfDLSSRRSupported"/>
+
+            <!-- XeSS Quality -->
+            <Var id="Dialog_XESSQuality" displayName="xess_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Dialog_XESSQuality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="option_nativeaa">
+                        <Entry varId="Dialog_XESSQuality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="option_xess_ultra_quality_plus">
+                        <Entry varId="Dialog_XESSQuality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="xess_ultraquality">
+                        <Entry varId="Dialog_XESSQuality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_quality">
+                        <Entry varId="Dialog_XESSQuality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="dlss_balanced">
+                        <Entry varId="Dialog_XESSQuality" value="5"/>
+                    </Option>
+                    <Option id="6" displayName="dlss_perf">
+                        <Entry varId="Dialog_XESSQuality" value="6"/>
+                    </Option>
+                    <Option id="7" displayName="dlss_ultraperf">
+                        <Entry varId="Dialog_XESSQuality" value="7"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- Dynamic Resolution Scaling -->
+            <Var id="Dialog_DRSEnable" displayName="DynamicResolutionScaling" displayType="OPTIONS" tags="customNames;customDisplayName;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Dialog_DRSEnable" value="false"/>
+                    </Option>
+                    <Option id="1" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Dialog_DRSEnable" value="true"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- HairWorks Section -->
+            <Var id="Dialog_HairWorksLevel" displayName="use_hair_works" displayType="OPTIONS" tags="refreshEngine;customNames;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Dialog_HairWorksLevel" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="Geralt">
+                        <Entry varId="Dialog_HairWorksLevel" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Dialog_HairWorksLevel" value="2"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- Path Traced Hair -->
+            <Var id="Dialog_PTHairQualityMode" displayName="option_rt_pt_hair" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;refreshEngine;enableIfRTHairworksSupported;enableIfLinearSweptSpheresSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Dialog_PTHairQualityMode" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Dialog_PTHairQualityMode" value="3"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- HairWorks AA -->
+            <Var id="Dialog_HairWorksAALevel" displayName="hair_works_aa" displayType="OPTIONS" tags="customNames;nonLocalized;indent;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="0">
+                        <Entry varId="Dialog_HairWorksAALevel" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="2">
+                        <Entry varId="Dialog_HairWorksAALevel" value="2"/>
+                    </Option>
+                    <Option id="2" displayName="4">
+                        <Entry varId="Dialog_HairWorksAALevel" value="4"/>
+                    </Option>
+                    <Option id="3" displayName="8">
+                        <Entry varId="Dialog_HairWorksAALevel" value="8"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- HairWorks Quality -->
+            <Var id="Dialog_HairWorksQualityPreset" displayName="hair_works_preset" displayType="OPTIONS" tags="refreshEngine;indent;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="low">
+                        <Entry varId="Dialog_HairWorksQualityPreset" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="high">
+                        <Entry varId="Dialog_HairWorksQualityPreset" value="1"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+        </VisibleVars>
+    </Group>
+
+    <!-- ================================================================= -->
+    <!-- 3. CUTSCENE SETTINGS                                              -->
+    <!-- ================================================================= -->
+    <Group id="CutscenePTCutscenes" displayName="Mods.CutscenePT.CutscenePT_Cutscenes">
+        <PresetsArray>
+            <Preset id="0" displayName="PresetFullPT">
+                <Entry varId="Cutscene_Enabled" value="true"/>
+                <Entry varId="Cutscene_EnableRT" value="true"/>
+                <Entry varId="Cutscene_PTEnable" value="true"/>
+                <Entry varId="Cutscene_RTGIPreset" value="true"/>
+                <Entry varId="Cutscene_EnableRtRadiance" value="true"/>
+                <Entry varId="Cutscene_Shadows" value="2"/>
+                <Entry varId="Cutscene_RTAOEnabled" value="true"/>
+                <Entry varId="Cutscene_AAMode" value="6"/>
+                <Entry varId="Cutscene_DLSSQuality" value="0"/>
+                <Entry varId="Cutscene_EnableDLSSRR" value="true"/>
+                <Entry varId="Cutscene_FSR2Quality" value="0"/>
+                <Entry varId="Cutscene_XESSQuality" value="0"/>
+                <Entry varId="Cutscene_DRSEnable" value="false"/>
+                <Entry varId="Cutscene_HairWorksLevel" value="0"/>
+                <Entry varId="Cutscene_PTHairQualityMode" value="0"/>
+                <Entry varId="Cutscene_HairWorksAALevel" value="0"/>
+                <Entry varId="Cutscene_HairWorksQualityPreset" value="0"/>
+            </Preset>
+            <Preset id="1" displayName="PresetPTGI">
+                <Entry varId="Cutscene_Enabled" value="true"/>
+                <Entry varId="Cutscene_EnableRT" value="true"/>
+                <Entry varId="Cutscene_PTEnable" value="true"/>
+                <Entry varId="Cutscene_RTGIPreset" value="false"/>
+                <Entry varId="Cutscene_EnableRtRadiance" value="false"/>
+                <Entry varId="Cutscene_Shadows" value="0"/>
+                <Entry varId="Cutscene_RTAOEnabled" value="false"/>
+                <Entry varId="Cutscene_AAMode" value="6"/>
+                <Entry varId="Cutscene_DLSSQuality" value="0"/>
+                <Entry varId="Cutscene_EnableDLSSRR" value="false"/>
+                <Entry varId="Cutscene_FSR2Quality" value="0"/>
+                <Entry varId="Cutscene_XESSQuality" value="0"/>
+                <Entry varId="Cutscene_DRSEnable" value="false"/>
+                <Entry varId="Cutscene_HairWorksLevel" value="0"/>
+                <Entry varId="Cutscene_PTHairQualityMode" value="0"/>
+                <Entry varId="Cutscene_HairWorksAALevel" value="0"/>
+                <Entry varId="Cutscene_HairWorksQualityPreset" value="0"/>
+            </Preset>
+            <Preset id="2" displayName="PresetFullRT">
+                <Entry varId="Cutscene_Enabled" value="true"/>
+                <Entry varId="Cutscene_EnableRT" value="true"/>
+                <Entry varId="Cutscene_PTEnable" value="false"/>
+                <Entry varId="Cutscene_RTGIPreset" value="true"/>
+                <Entry varId="Cutscene_EnableRtRadiance" value="true"/>
+                <Entry varId="Cutscene_Shadows" value="2"/>
+                <Entry varId="Cutscene_RTAOEnabled" value="true"/>
+                <Entry varId="Cutscene_AAMode" value="6"/>
+                <Entry varId="Cutscene_DLSSQuality" value="0"/>
+                <Entry varId="Cutscene_EnableDLSSRR" value="false"/>
+                <Entry varId="Cutscene_FSR2Quality" value="0"/>
+                <Entry varId="Cutscene_XESSQuality" value="0"/>
+                <Entry varId="Cutscene_DRSEnable" value="false"/>
+                <Entry varId="Cutscene_HairWorksLevel" value="0"/>
+                <Entry varId="Cutscene_PTHairQualityMode" value="0"/>
+                <Entry varId="Cutscene_HairWorksAALevel" value="0"/>
+                <Entry varId="Cutscene_HairWorksQualityPreset" value="0"/>
+            </Preset>
+        </PresetsArray>
+        <VisibleVars>
+            <!-- Toggle for Cutscenes -->
+            <Var id="Cutscene_Enabled" displayName="Cutscene_Enabled" displayType="TOGGLE"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- DLSS5 (OptiScaler) -->
+            <Var id="Cutscene_DLSSNR" displayName="DLSS5_OptiScaler" displayType="TOGGLE" tags="customDisplayName"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- Ray Tracing Section (Exact replica of graphics.xml) -->
+            <Var id="Cutscene_EnableRT" displayName="preset_value_rt" displayType="TOGGLE" tags="customDisplayName;customPresetIfChanged;enableIfRTSupported"/>
+            <Var id="Cutscene_PTEnable" displayName="option_rt_enable_path_tracer" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <!-- RT GI Preset -->
+            <Var id="Cutscene_RTGIPreset" displayName="option_rt_global_illumination" displayType="OPTIONS" tags="customNames;customDisplayName;indent;customPresetIfChanged;enableIfRTSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_perf">
+                        <Entry varId="Cutscene_RTGIPreset" value="false"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_quality">
+                        <Entry varId="Cutscene_RTGIPreset" value="true"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- RT Reflections -->
+            <Var id="Cutscene_EnableRtRadiance" displayName="enable_rt_radiance" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <!-- RT Shadows -->
+            <Var id="Cutscene_Shadows" displayName="enable_rt_shadows" displayType="OPTIONS" tags="customNames;indent;customPresetIfChanged;enableIfRTSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Cutscene_Shadows" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_perf">
+                        <Entry varId="Cutscene_Shadows" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_quality">
+                        <Entry varId="Cutscene_Shadows" value="2"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- RT Ambient Occlusion -->
+            <Var id="Cutscene_RTAOEnabled" displayName="option_rt_ambient_occlusion" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;enableIfRTSupported"/>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- Anti Aliasing / Upscaling Section (Exact replica of graphics.xml) -->
+            <Var id="Cutscene_AAMode" displayName="allow_Antialias" displayType="OPTIONS" tags="customNames;nonLocalizedExceptFirst">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Cutscene_AAMode" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="FXAA">
+                        <Entry varId="Cutscene_AAMode" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="AMD FSR Upscaling">
+                        <Entry varId="Cutscene_AAMode" value="5"/>
+                    </Option>
+                    <Option id="3" displayName="XeSS">
+                        <Entry varId="Cutscene_AAMode" value="7"/>
+                    </Option>
+                    <Option id="4" displayName="DLSS">
+                        <Entry varId="Cutscene_AAMode" value="6"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- FSR Quality -->
+            <Var id="Cutscene_FSR2Quality" displayName="fsr_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Cutscene_FSR2Quality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="option_nativeaa" tags="enableIfFSR4">
+                        <Entry varId="Cutscene_FSR2Quality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_quality">
+                        <Entry varId="Cutscene_FSR2Quality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="dlss_balanced">
+                        <Entry varId="Cutscene_FSR2Quality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_perf">
+                        <Entry varId="Cutscene_FSR2Quality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="dlss_ultraperf">
+                        <Entry varId="Cutscene_FSR2Quality" value="5"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- DLSS Quality -->
+            <Var id="Cutscene_DLSSQuality" displayName="dlss_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Cutscene_DLSSQuality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="dlss_quality">
+                        <Entry varId="Cutscene_DLSSQuality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="dlss_balanced">
+                        <Entry varId="Cutscene_DLSSQuality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="dlss_perf">
+                        <Entry varId="Cutscene_DLSSQuality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_ultraperf">
+                        <Entry varId="Cutscene_DLSSQuality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="option_dlss_dlaa">
+                        <Entry varId="Cutscene_DLSSQuality" value="5"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- DLSS Ray Reconstruction -->
+            <Var id="Cutscene_EnableDLSSRR" displayName="dlss_r" displayType="TOGGLE" tags="customNames;indent;customPresetIfChanged;enableIfDLSSRRSupported"/>
+
+            <!-- XeSS Quality -->
+            <Var id="Cutscene_XESSQuality" displayName="xess_quality" displayType="OPTIONS" tags="customNames;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="dlss_auto">
+                        <Entry varId="Cutscene_XESSQuality" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="option_nativeaa">
+                        <Entry varId="Cutscene_XESSQuality" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="option_xess_ultra_quality_plus">
+                        <Entry varId="Cutscene_XESSQuality" value="2"/>
+                    </Option>
+                    <Option id="3" displayName="xess_ultraquality">
+                        <Entry varId="Cutscene_XESSQuality" value="3"/>
+                    </Option>
+                    <Option id="4" displayName="dlss_quality">
+                        <Entry varId="Cutscene_XESSQuality" value="4"/>
+                    </Option>
+                    <Option id="5" displayName="dlss_balanced">
+                        <Entry varId="Cutscene_XESSQuality" value="5"/>
+                    </Option>
+                    <Option id="6" displayName="dlss_perf">
+                        <Entry varId="Cutscene_XESSQuality" value="6"/>
+                    </Option>
+                    <Option id="7" displayName="dlss_ultraperf">
+                        <Entry varId="Cutscene_XESSQuality" value="7"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- Dynamic Resolution Scaling -->
+            <Var id="Cutscene_DRSEnable" displayName="DynamicResolutionScaling" displayType="OPTIONS" tags="customNames;customDisplayName;indent">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Cutscene_DRSEnable" value="false"/>
+                    </Option>
+                    <Option id="1" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Cutscene_DRSEnable" value="true"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <Var id="Separator" displayName="" displayType="SUBTLE_SEPARATOR"/>
+
+            <!-- HairWorks Section -->
+            <Var id="Cutscene_HairWorksLevel" displayName="use_hair_works" displayType="OPTIONS" tags="refreshEngine;customNames;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Cutscene_HairWorksLevel" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="Geralt">
+                        <Entry varId="Cutscene_HairWorksLevel" value="1"/>
+                    </Option>
+                    <Option id="2" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Cutscene_HairWorksLevel" value="2"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- Path Traced Hair -->
+            <Var id="Cutscene_PTHairQualityMode" displayName="option_rt_pt_hair" displayType="TOGGLE" tags="customDisplayName;indent;customPresetIfChanged;refreshEngine;enableIfRTHairworksSupported;enableIfLinearSweptSpheresSupported">
+                <OptionsArray>
+                    <Option id="0" displayName="panel_mainmenu_option_value_off">
+                        <Entry varId="Cutscene_PTHairQualityMode" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="panel_mainmenu_option_value_on">
+                        <Entry varId="Cutscene_PTHairQualityMode" value="3"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- HairWorks AA -->
+            <Var id="Cutscene_HairWorksAALevel" displayName="hair_works_aa" displayType="OPTIONS" tags="customNames;nonLocalized;indent;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="0">
+                        <Entry varId="Cutscene_HairWorksAALevel" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="2">
+                        <Entry varId="Cutscene_HairWorksAALevel" value="2"/>
+                    </Option>
+                    <Option id="2" displayName="4">
+                        <Entry varId="Cutscene_HairWorksAALevel" value="4"/>
+                    </Option>
+                    <Option id="3" displayName="8">
+                        <Entry varId="Cutscene_HairWorksAALevel" value="8"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+
+            <!-- HairWorks Quality -->
+            <Var id="Cutscene_HairWorksQualityPreset" displayName="hair_works_preset" displayType="OPTIONS" tags="refreshEngine;indent;customPresetIfChanged;disableIfIntelGPU">
+                <OptionsArray>
+                    <Option id="0" displayName="low">
+                        <Entry varId="Cutscene_HairWorksQualityPreset" value="0"/>
+                    </Option>
+                    <Option id="1" displayName="high">
+                        <Entry varId="Cutscene_HairWorksQualityPreset" value="1"/>
+                    </Option>
+                </OptionsArray>
+            </Var>
+        </VisibleVars>
+    </Group>
+</UserConfig>

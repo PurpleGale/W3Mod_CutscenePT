@@ -1,0 +1,45 @@
+;meta[language=ua]
+; id      |key(hex)|key(str)| text
+2117592000|bfd5030e|CutscenePT|Кат-сцени: трасування шляху
+2117592001|2297a429|panel_CutscenePT|Кат-сцени: трасування шляху
+2117592002|8ba8c4b7|CutscenePT_General|Загальні налаштування
+2117592003|b9721ad2|panel_CutscenePT_General|Загальні налаштування
+2117592004|8d08a617|preset_CutscenePT_General|Пресеты
+2117592005|9c30f01a|Mods.CutscenePT.CutscenePT_General|Загальні налаштування
+2117592006|aa78b035|panel_Mods.CutscenePT.CutscenePT_General|Загальні налаштування
+2117592007|f31567fa|CutscenePT_Dialogs|Налаштування діалогів
+2117592008|20debe15|panel_CutscenePT_Dialogs|Налаштування діалогів
+2117592009|f475495a|preset_CutscenePT_Dialogs|Пресеты
+2117592010|039d935d|Mods.CutscenePT.CutscenePT_Dialogs|Налаштування діалогів
+2117592011|11e55378|panel_Mods.CutscenePT.CutscenePT_Dialogs|Налаштування діалогів
+2117592012|c6034638|CutscenePT_Cutscenes|Налаштування кат-сцен
+2117592013|a6cf8193|panel_CutscenePT_Cutscenes|Налаштування кат-сцен
+2117592014|eef04f98|preset_CutscenePT_Cutscenes|Пресеты
+2117592015|d52e24db|Mods.CutscenePT.CutscenePT_Cutscenes|Налаштування кат-сцен
+2117592016|70864a36|panel_Mods.CutscenePT.CutscenePT_Cutscenes|Налаштування кат-сцен
+2117592017|80f65dff|ModEnabled|Увімкнути модифікацію
+2117592018|7fd5c009|option_ModEnabled|Увімкнути модифікацію
+2117592019|892b674a|Dialog_Enabled|Застосовувати профіль діалогів
+2117592020|6616b454|option_Dialog_Enabled|Застосовувати профіль діалогів
+2117592021|2526b78c|Cutscene_Enabled|Застосовувати профіль кат-сцен
+2117592022|7472ea16|option_Cutscene_Enabled|Застосовувати профіль кат-сцен
+2117592027|1fa33d0b|ShowNotifications|Сповіщення на екрані
+2117592028|b9dd5bc1|option_ShowNotifications|Сповіщення на екрані
+2117592031|d1cbef30|DLSS5_OptiScaler|DLSS5 (OptiScaler)
+2117592032|211821ba|option_DLSS5_OptiScaler|DLSS5 (OptiScaler)
+2117592039|8e576508|Msg_PTActive|[Cutscene PT] Трасування шляху активне
+2117592040|a4b5ed18|Msg_PTRestored|[Cutscene PT] Освітлення геймплею відновлено
+2117592041|b6fbb231|preset_Mods_CutscenePT_CutscenePT|Пресеты
+2117592042|7178441d|preset_Mods_CutscenePT_CutscenePT_Dialogs|Пресеты
+2117592043|371fa59b|preset_Mods_CutscenePT_CutscenePT_Cutscenes|Пресеты
+2117592044|f2ceb4bd|preset_Mods.CutscenePT.CutscenePT_Dialogs|Пресеты
+2117592045|bc9c6e3b|preset_Mods.CutscenePT.CutscenePT_Cutscenes|Пресеты
+2117592046|1d8d3f82|PRESET_VALUE_0|Полная трассировка пути
+2117592047|1d8d3f83|PRESET_VALUE_1|Минимальная трассировка пути
+2117592048|1d8d3f84|PRESET_VALUE_2|Полная трассировка лучей
+2117592049|570f21e0|PRESET_VALUE_PresetFullPT|Полная трассировка пути
+2117592050|7c3ee233|PRESET_VALUE_PresetPTGI|Минимальная трассировка пути
+2117592051|570f221e|PRESET_VALUE_PresetFullRT|Полная трассировка лучей
+2117592052|570f21e0|preset_value_PresetFullPT|Полная трассировка пути
+2117592053|7c3ee233|preset_value_PresetPTGI|Минимальная трассировка пути
+2117592054|570f221e|preset_value_PresetFullRT|Полная трассировка лучей
