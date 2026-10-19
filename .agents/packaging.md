@@ -92,10 +92,25 @@ When creating a release (on GitHub and Nexus Mods):
    - It must exclusively use GitHub's [automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes) comparing against the previous release / tag.
    - When drafting or generating releases via GitHub Web UI or API, use the "Generate release notes" feature (or `generate_release_notes: true`).
 
-3. **Automated CI/CD Pipeline:**
-   - Any published release or tag push matching `v*` triggers `.github/workflows/release.yml`.
+3. **Automated CI/CD Pipeline & Git Release Commands:**
+   - Any git tag matching `v*` pushed to GitHub triggers `.github/workflows/release.yml`.
+   - The workflow automatically creates the GitHub Release, generates release notes from commit history, attaches the packaged `.zip`, and uploads the release to Nexus Mods.
+   - **Step-by-step Git release workflow:**
+     ```bash
+     # 1. Verify and ensure working tree is clean and synced
+     git status
+     git pull origin main
+
+     # 2. Verify that GetCutscenePTVersion() in CutscenePTOptions.ws matches <VERSION>
+
+     # 3. Create annotated git tag
+     git tag -a v<VERSION> -m "Release v<VERSION>"
+
+     # 4. Push tag to GitHub (triggers CI/CD workflow automatically)
+     git push origin v<VERSION>
+     ```
    - The pipeline:
      1. Builds the release archive using `python tools/package.py .`.
-     2. Uploads the zip asset to the GitHub Release.
+     2. Generates release notes automatically and creates the GitHub Release with the zip asset attached.
      3. Uploads the new version archive directly to Nexus Mods using `Nexus-Mods/upload-action` (File ID `8072358`).
 
