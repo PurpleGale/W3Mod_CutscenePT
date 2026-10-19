@@ -1,0 +1,54 @@
+name: Release and Upload to Nexus Mods
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build release archive
+        id: package
+        run: |
+          python tools/package.py .
+          ZIP_NAME=$(ls DynamicPathTracingForCutscenes_v*.zip | head -n 1)
+          # Extract version from filename (e.g. DynamicPathTracingForCutscenes_v1.33.zip -> 1.33)
+          VERSION=$(echo "$ZIP_NAME" | sed -E 's/DynamicPathTracingForCutscenes_v(.*)\.zip/\1/')
+          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Package created: $ZIP_NAME (Version: $VERSION)"
+
+      - name: Upload release asset to GitHub Release
+        if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.package.outputs.zip_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Nexus Mods
+        uses: Nexus-Mods/upload-action@v1
+        with:
+          api_key: ${{ secrets.NEXUS_API_KEY }}
+          file_id: 8072358
+          filename: ${{ steps.package.outputs.zip_name }}
+          version: ${{ steps.package.outputs.version }}
+          display_name: "Dynamic Path Tracing For Cutscenes v${{ steps.package.outputs.version }}"
+          category: "main"

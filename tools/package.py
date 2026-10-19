@@ -15,7 +15,9 @@ if not match:
 version = match.group(1)
 print(f"Detected mod version from CutscenePTOptions.ws: v{version}")
 
-output_dir = os.path.dirname(base_dir)
+import sys
+
+output_dir = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(base_dir)
 archive_path = os.path.join(output_dir, f"DynamicPathTracingForCutscenes_v{version}.zip")
 
 if os.path.exists(archive_path):
