@@ -198,7 +198,6 @@ class CutscenePTManager
 	public function ApplySceneProfile( profileType : int ) : void
 	{
 		var prof     : SCutscenePTProfile;
-		var msg      : string;
 		var rtStr    : string;
 		var ptStr    : string;
 		var giStr    : string;
@@ -333,23 +332,13 @@ class CutscenePTManager
 		m_activeProfileType = profileType;
 
 		// 5. User feedback notification if enabled
-		if ( m_options.IsShowNotifications() && thePlayer )
-		{
-			msg = GetLocStringByKeyExt( "Msg_PTActive" );
-			if ( msg == "" )
-			{
-				msg = "[Cutscene PT] Path Tracing Active";
-			}
-			thePlayer.DisplayHudMessage( msg );
-		}
+		SendNotification( "Msg_PTActive", "[Cutscene PT] Path Tracing Active" );
 
 		LogChannel( 'CutscenePT', "Profile " + profileType + " applied | RT: " + prof.enableRT + ", PT: " + prof.ptEnable + ", AA: " + prof.aaMode + ", DLSSQuality: " + prof.dlssQuality + ", DLSS-NR: " + prof.dlssnr + ", HW: " + prof.hairWorksLevel );
 	}
 
 	public function RestoreGameplayLighting() : void
 	{
-		var msg : string;
-
 		if ( !m_isPTApplied || !m_hasCachedValues )
 		{
 			m_isPTApplied = false;
@@ -457,17 +446,48 @@ class CutscenePTManager
 		m_hasCachedValues = false;
 
 		// 4. User feedback notification if enabled
-		if ( m_options.IsShowNotifications() && thePlayer )
-		{
-			msg = GetLocStringByKeyExt( "Msg_PTRestored" );
-			if ( msg == "" )
-			{
-				msg = "[Cutscene PT] Gameplay Lighting Restored";
-			}
-			thePlayer.DisplayHudMessage( msg );
-		}
+		SendNotification( "Msg_PTRestored", "[Cutscene PT] Gameplay Lighting Restored" );
 
 		LogChannel( 'CutscenePT', "Gameplay settings restored | RT: " + m_cachedEnableRT + ", PT: " + m_cachedPTEnable + ", AA: " + m_cachedAAMode + ", DLSSQuality: " + m_cachedDLSSQuality + ", HW: " + m_cachedHairWorksLevel );
+	}
+
+	// ---------------------------------------------------------------------
+	// Notifications
+	// ---------------------------------------------------------------------
+
+	private function SendNotification( msgKey : string, defaultFallback : string ) : void
+	{
+		var msg        : string;
+		var guiManager : CR4GuiManager;
+		var hud        : CR4ScriptedHud;
+
+		if ( !m_options || !m_options.IsShowNotifications() )
+		{
+			return;
+		}
+
+		msg = GetLocStringByKeyExt( msgKey );
+		if ( msg == "" )
+		{
+			msg = defaultFallback;
+		}
+
+		guiManager = theGame.GetGuiManager();
+		if ( guiManager )
+		{
+			guiManager.ShowNotification( msg );
+		}
+
+		hud = (CR4ScriptedHud)theGame.GetHud();
+		if ( hud )
+		{
+			hud.HudConsoleMsg( msg );
+		}
+
+		if ( thePlayer )
+		{
+			thePlayer.DisplayHudMessage( msg );
+		}
 	}
 
 	// ---------------------------------------------------------------------
