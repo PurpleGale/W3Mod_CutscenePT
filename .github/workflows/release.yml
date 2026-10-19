@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload to Nexus Mods
-        uses: Nexus-Mods/upload-action@v1
+        uses: Nexus-Mods/upload-action@main
         with:
           api_key: ${{ secrets.NEXUS_API_KEY }}
           file_id: 8072358
