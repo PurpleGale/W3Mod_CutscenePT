@@ -68,6 +68,11 @@ DynamicPathTracingForCutscenes_v<VERSION>.zip
 ## 3. Automated Packaging Script (Python)
 
 The mod version is defined in **one single place**: `GetCutscenePTVersion()` inside `content/scripts/local/CutscenePTOptions.ws`.
+The version follows semantic versioning strictly formatted as `a.b.c` (Major.Minor.Patch, e.g. `1.33.1`):
+- `Major` (`a`): Breaking architecture or engine changes.
+- `Minor` (`b`): New user features, settings, or menu additions.
+- `Patch` (`c`): Bug fixes, logger improvements, debouncing fixes, or localization updates.
+
 The packaging script `tools/package.py` automatically extracts this version and builds the release zip.
 
 To package a release, simply run:
@@ -84,7 +89,7 @@ The script extracts the version from `CutscenePTOptions.ws` and creates `Dynamic
 When creating a release (on GitHub and Nexus Mods):
 
 1. **Strict Version Consistency:**
-   - The release tag (`v<VERSION>`), release title (`v<VERSION>`), archive name (`DynamicPathTracingForCutscenes_v<VERSION>.zip`), and the version inside `GetCutscenePTVersion()` in `CutscenePTOptions.ws` **must match identically**.
+   - The release tag (`v<VERSION>`), release title (`v<VERSION>`), archive name (`DynamicPathTracingForCutscenes_v<VERSION>.zip`), and the version inside `GetCutscenePTVersion()` in `CutscenePTOptions.ws` **must match identically** in `v<major>.<minor>.<patch>` format (e.g. `v1.33.1`).
    - Before triggering a release, verify `GetCutscenePTVersion()` matches the intended version.
 
 2. **Automated Release Notes Only (No Hand-Written Text):**

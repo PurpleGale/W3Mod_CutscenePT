@@ -57,6 +57,10 @@ The mod dynamically switches ray tracing / path tracing settings in *The Witcher
 5. **Packaging & Release Rules:**
    - Always archive releases following the exact structure and filename specified in [.agents/packaging.md](packaging.md).
    - Use `python tools/package.py` to create the release archive.
+   - **Semantic Versioning Scheme (Major.Minor.Patch):** Mod versions strictly follow the semantic `a.b.c` format (e.g., `1.33.1`), consisting of Major (`a`), Minor (`b`), and Patch (`c`) numbers:
+     - `Major` (`a`): Breaking changes, major architectural rewrites, or fundamental redesigns.
+     - `Minor` (`b`): New features, menu options, or functional additions.
+     - `Patch` (`c`): Bug fixes, debounce adjustments, diagnostic/logging improvements, or localization updates.
    - **Release Consistency:** The git tag (`v<VERSION>`), release title, archive name, and `GetCutscenePTVersion()` in `CutscenePTOptions.ws` must be strictly identical.
    - **Automated Release Notes:** Release descriptions on GitHub must never contain manually written free-form text; use only GitHub's automatically generated release notes comparing against the previous release.
 

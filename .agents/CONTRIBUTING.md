@@ -48,6 +48,10 @@ This document outlines the workflow, coding standards, and architectural convent
 
 - **Version Management:**
   - The mod version is maintained in a single source of truth: `GetCutscenePTVersion()` inside `content/scripts/local/CutscenePTOptions.ws`.
+  - The version strictly follows Semantic Versioning `a.b.c` (`Major.Minor.Patch`, e.g. `1.33.1`):
+    - `Major` (`a`): Breaking changes or engine redesigns.
+    - `Minor` (`b`): New features, menu options, or functional additions.
+    - `Patch` (`c`): Bug fixes, logger improvements, debouncing fixes, or localization updates.
   - Release archives are created with:
     ```powershell
     python tools/package.py
