@@ -54,9 +54,11 @@ The mod dynamically switches ray tracing / path tracing settings in *The Witcher
    - The REDengine hash `0xb38875ad` corresponds to vanilla `panel_general` (`Settings > Video > Graphics`). Colliding with it will break the native game menu.
    - Refer to [.agents/localization.md](localization.md) for hashing rules and namespace patterns.
 
-5. **Packaging:**
+5. **Packaging & Release Rules:**
    - Always archive releases following the exact structure and filename specified in [.agents/packaging.md](packaging.md).
    - Use `python tools/package.py` to create the release archive.
+   - **Release Consistency:** The git tag (`v<VERSION>`), release title, archive name, and `GetCutscenePTVersion()` in `CutscenePTOptions.ws` must be strictly identical.
+   - **Automated Release Notes:** Release descriptions on GitHub must never contain manually written free-form text; use only GitHub's automatically generated release notes comparing against the previous release.
 
 6. **Rule of Truth & Fact Verification (CRITICAL):**
    - The assistant must never make assumptions or claim that a technology, feature, version, or fact does not exist simply because it is unfamiliar or beyond its static training data.

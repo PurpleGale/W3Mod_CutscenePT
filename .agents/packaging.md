@@ -76,3 +76,26 @@ python tools/package.py
 ```
 
 The script extracts the version from `CutscenePTOptions.ws` and creates `DynamicPathTracingForCutscenes_v<VERSION>.zip` containing `bin/` and `mods/modCutscenePT/content/`.
+
+---
+
+## 4. Release Process & Rules (CRITICAL)
+
+When creating a release (on GitHub and Nexus Mods):
+
+1. **Strict Version Consistency:**
+   - The release tag (`v<VERSION>`), release title (`v<VERSION>`), archive name (`DynamicPathTracingForCutscenes_v<VERSION>.zip`), and the version inside `GetCutscenePTVersion()` in `CutscenePTOptions.ws` **must match identically**.
+   - Before triggering a release, verify `GetCutscenePTVersion()` matches the intended version.
+
+2. **Automated Release Notes Only (No Hand-Written Text):**
+   - The release description on GitHub **must not contain manually written free-form text**.
+   - It must exclusively use GitHub's [automatically generated release notes](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes) comparing against the previous release / tag.
+   - When drafting or generating releases via GitHub Web UI or API, use the "Generate release notes" feature (or `generate_release_notes: true`).
+
+3. **Automated CI/CD Pipeline:**
+   - Any published release or tag push matching `v*` triggers `.github/workflows/release.yml`.
+   - The pipeline:
+     1. Builds the release archive using `python tools/package.py .`.
+     2. Uploads the zip asset to the GitHub Release.
+     3. Uploads the new version archive directly to Nexus Mods using `Nexus-Mods/upload-action` (File ID `8072358`).
+
