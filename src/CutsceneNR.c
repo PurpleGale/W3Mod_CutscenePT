@@ -7,6 +7,8 @@ static uint32_t g_enabledOffset = 0; // Master switch: "Enable Neural Rendering"
 static uint32_t g_modelOffset = 0;   // Model switch:  "Apply the model" (0x11B8)
 static BOOL g_initialized = FALSE;
 
+#define CUTSCENE_PT_VERSION "1.33.1"
+
 static void LogToFile(const char* fmt, ...) {
     char buf[1024];
     va_list args;
@@ -36,7 +38,15 @@ __declspec(dllexport) void InitializeASI(void) {
 }
 
 static void LogEnvironmentDiagnostics(void) {
-    // 1. Hardware GPU Name (Non-personal)
+    // 1. Mod & Plugin Identity
+    LogToFile("[CutsceneNR] Mod Version: Dynamic Path Tracing For Cutscenes v%s", CUTSCENE_PT_VERSION);
+
+    // 2. Operating System (Non-personal, anonymized NT build)
+    DWORD osBuild = *(DWORD*)0x7FFE0260;
+    const char* osName = (osBuild >= 22000) ? "Windows 11" : (osBuild >= 10240 ? "Windows 10" : "Windows NT");
+    LogToFile("[CutsceneNR] Operating System: %s (64-bit, NT Build %u)", osName, osBuild);
+
+    // 3. Hardware GPU Name (Non-personal)
     DISPLAY_DEVICEA dd;
     ZeroMemory(&dd, sizeof(dd));
     dd.cb = sizeof(dd);
@@ -46,7 +56,7 @@ static void LogEnvironmentDiagnostics(void) {
     }
     LogToFile("[CutsceneNR] Hardware GPU: %s", gpuName);
 
-    // 2. Scan active proxy/hook DLLs in process (Non-personal)
+    // 4. Scan active proxy/hook DLLs in process (Non-personal)
     static const char* hookModules[] = {
         "dxgi.dll",
         "d3d12.dll",
@@ -85,7 +95,7 @@ static void LogEnvironmentDiagnostics(void) {
         LogToFile("[CutsceneNR] Active Hook DLL: %s (%s, Base=%p)", hookModules[i], tag, h);
     }
 
-    // 3. Game Folder Assets Check (Non-personal)
+    // 5. Game Folder Assets Check (Non-personal)
     char exePath[MAX_PATH];
     if (GetModuleFileNameA(NULL, exePath, MAX_PATH)) {
         char* lastSlash = strrchr(exePath, '\\');
@@ -94,8 +104,13 @@ static void LogEnvironmentDiagnostics(void) {
         char dlssnrFile[MAX_PATH];
         lstrcpyA(dlssnrFile, exePath);
         lstrcatA(dlssnrFile, "nvngx_dlssnr.dll");
-        BOOL hasDlssnr = (GetFileAttributesA(dlssnrFile) != INVALID_FILE_ATTRIBUTES);
-        LogToFile("[CutsceneNR] DLSS-NR Model File (nvngx_dlssnr.dll): %s", hasDlssnr ? "Present" : "Missing");
+        WIN32_FILE_ATTRIBUTE_DATA fad;
+        if (GetFileAttributesExA(dlssnrFile, GetFileExInfoStandard, &fad)) {
+            uint64_t fileSize = ((uint64_t)fad.nFileSizeHigh << 32) | fad.nFileSizeLow;
+            LogToFile("[CutsceneNR] DLSS-NR Model File (nvngx_dlssnr.dll): Present (%u KB)", (uint32_t)(fileSize / 1024));
+        } else {
+            LogToFile("[CutsceneNR] DLSS-NR Model File (nvngx_dlssnr.dll): Missing");
+        }
 
         char iniFile[MAX_PATH];
         lstrcpyA(iniFile, exePath);
@@ -105,14 +120,20 @@ static void LogEnvironmentDiagnostics(void) {
             char valPrecision[32] = {0};
             char valRunBefore[32] = {0};
             char valResidual[32] = {0};
+            char valDx12Upscaler[32] = {0};
+            char valLoadPlugins[32] = {0};
 
             GetPrivateProfileStringA("DlssNr", "Enabled", "N/A", valEnabled, sizeof(valEnabled), iniFile);
             GetPrivateProfileStringA("DlssNr", "Precision", "N/A", valPrecision, sizeof(valPrecision), iniFile);
             GetPrivateProfileStringA("DlssNr", "RunBeforeSR", "N/A", valRunBefore, sizeof(valRunBefore), iniFile);
             GetPrivateProfileStringA("DlssNr", "ResidualAcrossRR", "N/A", valResidual, sizeof(valResidual), iniFile);
+            GetPrivateProfileStringA("Upscalers", "Dx12Upscaler", "N/A", valDx12Upscaler, sizeof(valDx12Upscaler), iniFile);
+            GetPrivateProfileStringA("Plugins", "LoadAsiPlugins", "N/A", valLoadPlugins, sizeof(valLoadPlugins), iniFile);
 
             LogToFile("[CutsceneNR] OptiScaler.ini [DlssNr]: Enabled=%s, Precision=%s, RunBeforeSR=%s, ResidualAcrossRR=%s",
                       valEnabled, valPrecision, valRunBefore, valResidual);
+            LogToFile("[CutsceneNR] OptiScaler.ini [System]: Dx12Upscaler=%s, LoadAsiPlugins=%s",
+                      valDx12Upscaler, valLoadPlugins);
 
             if (lstrcmpA(valPrecision, "4") == 0 && strstr(gpuName, "50") == NULL) {
                 LogToFile("[CutsceneNR] [DIAGNOSTIC NOTE] Precision=4 (NVFP4) requires RTX 50 GPU. If cutscenes freeze, set Precision=0 in OptiScaler.ini!");
@@ -228,17 +249,27 @@ static void FindOptiScalerOffsets(HMODULE hOpti) {
         }
     }
 
+    BOOL dynamicConfig = (g_ppConfig != NULL);
+    BOOL dynamicEnabled = (g_enabledOffset != 0);
+    BOOL dynamicModel = (g_modelOffset != 0);
+
     // Safety validation and Fallbacks
     if (!g_ppConfig)                                      g_ppConfig = (void**)((uintptr_t)hOpti + 0x18c0d80);
     if (!g_enabledOffset || g_enabledOffset > 0x4000)     g_enabledOffset = 0x13A;
     if (!g_modelOffset   || g_modelOffset   > 0x4000)     g_modelOffset = 0x11B8;
 
-    LogToFile("[CutsceneNR] Scanner ready: Config*=%p, EnabledOffset=0x%X, ModelOffset=0x%X",
-              g_ppConfig, g_enabledOffset, g_modelOffset);
+    LogToFile("[CutsceneNR] Scanner ready: Config*=%p (%s), EnabledOffset=0x%X (%s), ModelOffset=0x%X (%s)",
+              g_ppConfig, dynamicConfig ? "dynamic" : "fallback",
+              g_enabledOffset, dynamicEnabled ? "dynamic" : "fallback",
+              g_modelOffset, dynamicModel ? "dynamic" : "fallback");
     g_initialized = TRUE;
 }
 
+static HMODULE s_cachedOpti = NULL;
+
 static HMODULE FindOptiScalerModule(void) {
+    if (s_cachedOpti) return s_cachedOpti;
+
     // Supports all proxy DLL names used by OptiScaler / DLSS 5 Manager
     static const char* candidateNames[] = {
         "dxgi.dll",
@@ -266,8 +297,26 @@ static HMODULE FindOptiScalerModule(void) {
         uint32_t modSize = nt->OptionalHeader.SizeOfImage;
         for (uint32_t j = 0; j + 11 < modSize && j < 0x2000000; j++) {
             if (memcmp(base + j, "OptiScaler\0", 11) == 0) {
+                s_cachedOpti = hMod;
                 LogToFile("[CutsceneNR] Identified OptiScaler in module: %s (%p)", candidateNames[i], hMod);
-                return hMod;
+
+                // Extract and log OptiScaler version string if present
+                char optiVersion[64] = {0};
+                for (uint32_t v = 0; v + 12 < modSize && v < 0x2000000; v++) {
+                    if (memcmp(base + v, "OptiScaler v", 12) == 0) {
+                        int len = 0;
+                        while (len < 63 && base[v + len] >= 0x20 && base[v + len] <= 0x7E) {
+                            optiVersion[len] = (char)base[v + len];
+                            len++;
+                        }
+                        optiVersion[len] = '\0';
+                        break;
+                    }
+                }
+                if (optiVersion[0]) {
+                    LogToFile("[CutsceneNR] %s", optiVersion);
+                }
+                return s_cachedOpti;
             }
         }
     }
@@ -324,6 +373,10 @@ static DWORD WINAPI WorkerThread(LPVOID param) {
     // Anonymized logging (no username or personal information leaked)
     LogToFile("[CutsceneNR] Watching settings at: <USERPROFILE>%s",
               isOneDrive ? "\\OneDrive\\Documents\\The Witcher 3\\dx12user.settings" : "\\Documents\\The Witcher 3\\dx12user.settings");
+
+    // Eagerly resolve OptiScaler config pointer on startup
+    char* pInitConfig = NULL;
+    GetConfigPtr(&pInitConfig);
 
     while (1) {
         Sleep(25);

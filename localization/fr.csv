@@ -1,45 +1,45 @@
 ;meta[language=fr]
 ; id      |key(hex)|key(str)| text
-2117592000|bfd5030e|CutscenePT|Cutscene Path Tracing
-2117592001|2297a429|panel_CutscenePT|Cutscene Path Tracing
-2117592002|8ba8c4b7|CutscenePT_General|General
-2117592003|b9721ad2|panel_CutscenePT_General|General
-2117592004|8d08a617|preset_CutscenePT_General|Presets
-2117592005|9c30f01a|Mods.CutscenePT.CutscenePT_General|General
-2117592006|aa78b035|panel_Mods.CutscenePT.CutscenePT_General|General
-2117592007|f31567fa|CutscenePT_Dialogs|Dialog Settings
-2117592008|20debe15|panel_CutscenePT_Dialogs|Dialog Settings
-2117592009|f475495a|preset_CutscenePT_Dialogs|Presets
-2117592010|039d935d|Mods.CutscenePT.CutscenePT_Dialogs|Dialog Settings
-2117592011|11e55378|panel_Mods.CutscenePT.CutscenePT_Dialogs|Dialog Settings
-2117592012|c6034638|CutscenePT_Cutscenes|Cutscene Settings
-2117592013|a6cf8193|panel_CutscenePT_Cutscenes|Cutscene Settings
-2117592014|eef04f98|preset_CutscenePT_Cutscenes|Presets
-2117592015|d52e24db|Mods.CutscenePT.CutscenePT_Cutscenes|Cutscene Settings
-2117592016|70864a36|panel_Mods.CutscenePT.CutscenePT_Cutscenes|Cutscene Settings
-2117592017|80f65dff|ModEnabled|Mod Enabled
-2117592018|7fd5c009|option_ModEnabled|Mod Enabled
-2117592019|892b674a|Dialog_Enabled|Enable Dialog Profile
-2117592020|6616b454|option_Dialog_Enabled|Enable Dialog Profile
-2117592021|2526b78c|Cutscene_Enabled|Enable Cutscene Profile
-2117592022|7472ea16|option_Cutscene_Enabled|Enable Cutscene Profile
-2117592027|1fa33d0b|ShowNotifications|Show HUD Notifications
-2117592028|b9dd5bc1|option_ShowNotifications|Show HUD Notifications
+2117592000|bfd5030e|CutscenePT|Cinématiques : Path Tracing
+2117592001|2297a429|panel_CutscenePT|Cinématiques : Path Tracing
+2117592002|8ba8c4b7|CutscenePT_General|Paramètres généraux
+2117592003|b9721ad2|panel_CutscenePT_General|Paramètres généraux
+2117592004|8d08a617|preset_CutscenePT_General|Préréglages
+2117592005|9c30f01a|Mods.CutscenePT.CutscenePT_General|Paramètres généraux
+2117592006|aa78b035|panel_Mods.CutscenePT.CutscenePT_General|Paramètres généraux
+2117592007|f31567fa|CutscenePT_Dialogs|Paramètres des dialogues
+2117592008|20debe15|panel_CutscenePT_Dialogs|Paramètres des dialogues
+2117592009|f475495a|preset_CutscenePT_Dialogs|Préréglages
+2117592010|039d935d|Mods.CutscenePT.CutscenePT_Dialogs|Paramètres des dialogues
+2117592011|11e55378|panel_Mods.CutscenePT.CutscenePT_Dialogs|Paramètres des dialogues
+2117592012|c6034638|CutscenePT_Cutscenes|Paramètres des cinématiques
+2117592013|a6cf8193|panel_CutscenePT_Cutscenes|Paramètres des cinématiques
+2117592014|eef04f98|preset_CutscenePT_Cutscenes|Préréglages
+2117592015|d52e24db|Mods.CutscenePT.CutscenePT_Cutscenes|Paramètres des cinématiques
+2117592016|70864a36|panel_Mods.CutscenePT.CutscenePT_Cutscenes|Paramètres des cinématiques
+2117592017|80f65dff|ModEnabled|Activer le mod
+2117592018|7fd5c009|option_ModEnabled|Activer le mod
+2117592019|892b674a|Dialog_Enabled|Activer le profil de dialogue
+2117592020|6616b454|option_Dialog_Enabled|Activer le profil de dialogue
+2117592021|2526b78c|Cutscene_Enabled|Activer le profil de cinématique
+2117592022|7472ea16|option_Cutscene_Enabled|Activer le profil de cinématique
+2117592027|1fa33d0b|ShowNotifications|Afficher les notifications ATH
+2117592028|b9dd5bc1|option_ShowNotifications|Afficher les notifications ATH
 2117592031|d1cbef30|DLSS5_OptiScaler|DLSS5 (OptiScaler)
 2117592032|211821ba|option_DLSS5_OptiScaler|DLSS5 (OptiScaler)
-2117592039|8e576508|Msg_PTActive|[Cutscene PT] Path Tracing Active
-2117592040|a4b5ed18|Msg_PTRestored|[Cutscene PT] Gameplay Lighting Restored
-2117592041|b6fbb231|preset_Mods_CutscenePT_CutscenePT|Presets
-2117592042|7178441d|preset_Mods_CutscenePT_CutscenePT_Dialogs|Presets
-2117592043|371fa59b|preset_Mods_CutscenePT_CutscenePT_Cutscenes|Presets
-2117592044|f2ceb4bd|preset_Mods.CutscenePT.CutscenePT_Dialogs|Presets
-2117592045|bc9c6e3b|preset_Mods.CutscenePT.CutscenePT_Cutscenes|Presets
-2117592046|1d8d3f82|PRESET_VALUE_0|Full Path Tracing
-2117592047|1d8d3f83|PRESET_VALUE_1|Minimal Path Tracing
-2117592048|1d8d3f84|PRESET_VALUE_2|Full Ray Tracing
-2117592049|570f21e0|PRESET_VALUE_PresetFullPT|Full Path Tracing
-2117592050|7c3ee233|PRESET_VALUE_PresetPTGI|Minimal Path Tracing
-2117592051|570f221e|PRESET_VALUE_PresetFullRT|Full Ray Tracing
-2117592052|570f21e0|preset_value_PresetFullPT|Full Path Tracing
-2117592053|7c3ee233|preset_value_PresetPTGI|Minimal Path Tracing
-2117592054|570f221e|preset_value_PresetFullRT|Full Ray Tracing
+2117592039|8e576508|Msg_PTActive|[Cutscene PT] Path Tracing activé
+2117592040|a4b5ed18|Msg_PTRestored|[Cutscene PT] Éclairage du gameplay restauré
+2117592041|b6fbb231|preset_Mods_CutscenePT_CutscenePT|Préréglages
+2117592042|7178441d|preset_Mods_CutscenePT_CutscenePT_Dialogs|Préréglages
+2117592043|371fa59b|preset_Mods_CutscenePT_CutscenePT_Cutscenes|Préréglages
+2117592044|f2ceb4bd|preset_Mods.CutscenePT.CutscenePT_Dialogs|Préréglages
+2117592045|bc9c6e3b|preset_Mods.CutscenePT.CutscenePT_Cutscenes|Préréglages
+2117592046|1d8d3f82|PRESET_VALUE_0|Path Tracing complet
+2117592047|1d8d3f83|PRESET_VALUE_1|Path Tracing minimal
+2117592048|1d8d3f84|PRESET_VALUE_2|Ray Tracing complet
+2117592049|570f21e0|PRESET_VALUE_PresetFullPT|Path Tracing complet
+2117592050|7c3ee233|PRESET_VALUE_PresetPTGI|Path Tracing minimal
+2117592051|570f221e|PRESET_VALUE_PresetFullRT|Ray Tracing complet
+2117592052|570f21e0|preset_value_PresetFullPT|Path Tracing complet
+2117592053|7c3ee233|preset_value_PresetPTGI|Path Tracing minimal
+2117592054|570f221e|preset_value_PresetFullRT|Ray Tracing complet

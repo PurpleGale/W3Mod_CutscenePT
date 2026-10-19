@@ -2,11 +2,11 @@
 ; id      |key(hex)|key(str)| text
 2117592000|bfd5030e|CutscenePT|Przerywniki filmowe: Path Tracing
 2117592001|2297a429|panel_CutscenePT|Przerywniki filmowe: Path Tracing
-2117592002|8ba8c4b7|CutscenePT_General|Ogólne
-2117592003|b9721ad2|panel_CutscenePT_General|Ogólne
+2117592002|8ba8c4b7|CutscenePT_General|Ustawienia ogólne
+2117592003|b9721ad2|panel_CutscenePT_General|Ustawienia ogólne
 2117592004|8d08a617|preset_CutscenePT_General|Presety
-2117592005|9c30f01a|Mods.CutscenePT.CutscenePT_General|Ogólne
-2117592006|aa78b035|panel_Mods.CutscenePT.CutscenePT_General|Ogólne
+2117592005|9c30f01a|Mods.CutscenePT.CutscenePT_General|Ustawienia ogólne
+2117592006|aa78b035|panel_Mods.CutscenePT.CutscenePT_General|Ustawienia ogólne
 2117592007|f31567fa|CutscenePT_Dialogs|Ustawienia dialogów
 2117592008|20debe15|panel_CutscenePT_Dialogs|Ustawienia dialogów
 2117592009|f475495a|preset_CutscenePT_Dialogs|Presety

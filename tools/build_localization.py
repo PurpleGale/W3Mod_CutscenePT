@@ -1,113 +1,408 @@
-import os, glob, subprocess
+import os
+import sys
 
-def hash_key(key: str) -> str:
-    h = 0
-    for c in key.lower():
-        h = ((h * 31) + ord(c)) & 0xffffffff
-    return f"{h:08x}"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from w3strings_nextgen import hash_key, encode_w3strings
 
-# String definitions: (id_offset, key_str, ru_text, en_text, pl_text, de_text)
-DEFINITIONS = [
-    (0, "CutscenePT", "Кат-сцены: трассировка пути", "Cutscene Path Tracing", "Przerywniki filmowe: Path Tracing", "Zwischensequenzen: Path Tracing"),
-    (1, "panel_CutscenePT", "Кат-сцены: трассировка пути", "Cutscene Path Tracing", "Przerywniki filmowe: Path Tracing", "Zwischensequenzen: Path Tracing"),
-    (2, "CutscenePT_General", "Общие настройки", "General", "Ogólne", "Allgemein"),
-    (3, "panel_CutscenePT_General", "Общие настройки", "General", "Ogólne", "Allgemein"),
-    (4, "preset_CutscenePT_General", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (5, "Mods.CutscenePT.CutscenePT_General", "Общие настройки", "General", "Ogólne", "Allgemein"),
-    (6, "panel_Mods.CutscenePT.CutscenePT_General", "Общие настройки", "General", "Ogólne", "Allgemein"),
-    (7, "CutscenePT_Dialogs", "Настройки диалогов", "Dialog Settings", "Ustawienia dialogów", "Dialogeinstellungen"),
-    (8, "panel_CutscenePT_Dialogs", "Настройки диалогов", "Dialog Settings", "Ustawienia dialogów", "Dialogeinstellungen"),
-    (9, "preset_CutscenePT_Dialogs", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (10, "Mods.CutscenePT.CutscenePT_Dialogs", "Настройки диалогов", "Dialog Settings", "Ustawienia dialogów", "Dialogeinstellungen"),
-    (11, "panel_Mods.CutscenePT.CutscenePT_Dialogs", "Настройки диалогов", "Dialog Settings", "Ustawienia dialogów", "Dialogeinstellungen"),
-    (12, "CutscenePT_Cutscenes", "Настройки кат-сцен", "Cutscene Settings", "Ustawienia przerywników", "Zwischensequenzeinstellungen"),
-    (13, "panel_CutscenePT_Cutscenes", "Настройки кат-сцен", "Cutscene Settings", "Ustawienia przerywników", "Zwischensequenzeinstellungen"),
-    (14, "preset_CutscenePT_Cutscenes", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (15, "Mods.CutscenePT.CutscenePT_Cutscenes", "Настройки кат-сцен", "Cutscene Settings", "Ustawienia przerywników", "Zwischensequenzeinstellungen"),
-    (16, "panel_Mods.CutscenePT.CutscenePT_Cutscenes", "Настройки кат-сцен", "Cutscene Settings", "Ustawienia przerywników", "Zwischensequenzeinstellungen"),
-    (17, "ModEnabled", "Включить модификацию", "Mod Enabled", "Włącz mod", "Mod aktivieren"),
-    (18, "option_ModEnabled", "Включить модификацию", "Mod Enabled", "Włącz mod", "Mod aktivieren"),
-    (19, "Dialog_Enabled", "Применять профиль диалогов", "Enable Dialog Profile", "Włącz profil dialogów", "Dialogprofil aktivieren"),
-    (20, "option_Dialog_Enabled", "Применять профиль диалогов", "Enable Dialog Profile", "Włącz profil dialogów", "Dialogprofil aktivieren"),
-    (21, "Cutscene_Enabled", "Применять профиль кат-сцен", "Enable Cutscene Profile", "Włącz profil przerywników", "Zwischensequenzprofil aktivieren"),
-    (22, "option_Cutscene_Enabled", "Применять профиль кат-сцен", "Enable Cutscene Profile", "Włącz profil przerywników", "Zwischensequenzprofil aktivieren"),
-    (27, "ShowNotifications", "Уведомления на экране", "Show HUD Notifications", "Powiadomienia na ekranie", "HUD-Benachrichtigungen anzeigen"),
-    (28, "option_ShowNotifications", "Уведомления на экране", "Show HUD Notifications", "Powiadomienia na ekranie", "HUD-Benachrichtigungen anzeigen"),
+BASE_STR_ID = 2117592000
 
-    (31, "DLSS5_OptiScaler", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)"),
-    (32, "option_DLSS5_OptiScaler", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)", "DLSS5 (OptiScaler)"),
-    (39, "Msg_PTActive", "[Cutscene PT] Трассировка пути активна", "[Cutscene PT] Path Tracing Active", "[Cutscene PT] Path Tracing aktywny", "[Cutscene PT] Path Tracing aktiv"),
-    (40, "Msg_PTRestored", "[Cutscene PT] Освещение геймплея восстановлено", "[Cutscene PT] Gameplay Lighting Restored", "[Cutscene PT] Przywrócono oświetlenie rozgrywki", "[Cutscene PT] Gameplay-Beleuchtung wiederhergestellt"),
-    (41, "preset_Mods_CutscenePT_CutscenePT", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (42, "preset_Mods_CutscenePT_CutscenePT_Dialogs", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (43, "preset_Mods_CutscenePT_CutscenePT_Cutscenes", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (44, "preset_Mods.CutscenePT.CutscenePT_Dialogs", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (45, "preset_Mods.CutscenePT.CutscenePT_Cutscenes", "Пресеты", "Presets", "Presety", "Voreinstellungen"),
-    (46, "PRESET_VALUE_0", "Полная трассировка пути", "Full Path Tracing", "Pełny Path Tracing", "Vollständiges Path Tracing"),
-    (47, "PRESET_VALUE_1", "Минимальная трассировка пути", "Minimal Path Tracing", "Minimalny Path Tracing", "Minimales Path Tracing"),
-    (48, "PRESET_VALUE_2", "Полная трассировка лучей", "Full Ray Tracing", "Pełny Ray Tracing", "Vollständiges Ray Tracing"),
-    (49, "PRESET_VALUE_PresetFullPT", "Полная трассировка пути", "Full Path Tracing", "Pełny Path Tracing", "Vollständiges Path Tracing"),
-    (50, "PRESET_VALUE_PresetPTGI", "Минимальная трассировка пути", "Minimal Path Tracing", "Minimalny Path Tracing", "Minimales Path Tracing"),
-    (51, "PRESET_VALUE_PresetFullRT", "Полная трассировка лучей", "Full Ray Tracing", "Pełny Ray Tracing", "Vollständiges Ray Tracing"),
-    (52, "preset_value_PresetFullPT", "Полная трассировка пути", "Full Path Tracing", "Pełny Path Tracing", "Vollständiges Path Tracing"),
-    (53, "preset_value_PresetPTGI", "Минимальная трассировка пути", "Minimal Path Tracing", "Minimalny Path Tracing", "Minimales Path Tracing"),
-    (54, "preset_value_PresetFullRT", "Полная трассировка лучей", "Full Ray Tracing", "Pełny Ray Tracing", "Vollständiges Ray Tracing"),
+LANGUAGES = ['en', 'ru', 'pl', 'de', 'fr', 'it', 'es', 'esmx', 'br', 'cz', 'hu', 'jp', 'kr', 'zh', 'cn', 'tr', 'ar', 'ua']
+
+TRANSLATIONS = {
+    "CutscenePT": {
+        "en": "Cutscene Path Tracing",
+        "ru": "Кат-сцены: трассировка пути",
+        "pl": "Przerywniki filmowe: Path Tracing",
+        "de": "Zwischensequenzen: Path Tracing",
+        "fr": "Cinématiques : Path Tracing",
+        "it": "Filmati: Path Tracing",
+        "es": "Cinemáticas: trazado de caminos",
+        "esmx": "Cinemáticas: trazado de caminos",
+        "br": "Cenas: traçado de caminhos",
+        "cz": "Filmové scény: Path Tracing",
+        "hu": "Átvezető jelenetek: Útkövetés",
+        "jp": "カットシーン：パストレーシング",
+        "kr": "컷신: 패스 트레이싱",
+        "zh": "過場動畫：路徑追蹤",
+        "cn": "过场动画：路径追踪",
+        "tr": "Ara Sahneler: Yol İzleme",
+        "ar": "المشاهد السينمائية: تتبع المسار",
+        "ua": "Кат-сцени: трасування шляху",
+    },
+    "CutscenePT_General": {
+        "en": "General Settings",
+        "ru": "Общие настройки",
+        "pl": "Ustawienia ogólne",
+        "de": "Allgemeine Einstellungen",
+        "fr": "Paramètres généraux",
+        "it": "Impostazioni generali",
+        "es": "Ajustes generales",
+        "esmx": "Configuración general",
+        "br": "Configurações gerais",
+        "cz": "Obecná nastavení",
+        "hu": "Általános beállítások",
+        "jp": "一般設定",
+        "kr": "일반 설정",
+        "zh": "一般設定",
+        "cn": "常规设置",
+        "tr": "Genel Ayarlar",
+        "ar": "الإعدادات العامة",
+        "ua": "Загальні налаштування",
+    },
+    "CutscenePT_Dialogs": {
+        "en": "Dialog Settings",
+        "ru": "Настройки диалогов",
+        "pl": "Ustawienia dialogów",
+        "de": "Dialogeinstellungen",
+        "fr": "Paramètres des dialogues",
+        "it": "Impostazioni dialoghi",
+        "es": "Ajustes de diálogos",
+        "esmx": "Configuración de diálogos",
+        "br": "Configurações de diálogos",
+        "cz": "Nastavení dialogů",
+        "hu": "Párbeszéd beállítások",
+        "jp": "会話シーン設定",
+        "kr": "대화 설정",
+        "zh": "對話設定",
+        "cn": "对话设置",
+        "tr": "Diyalog Ayarları",
+        "ar": "إعدادات الحوار",
+        "ua": "Налаштування діалогів",
+    },
+    "CutscenePT_Cutscenes": {
+        "en": "Cutscene Settings",
+        "ru": "Настройки кат-сцен",
+        "pl": "Ustawienia przerywników",
+        "de": "Zwischensequenzeinstellungen",
+        "fr": "Paramètres des cinématiques",
+        "it": "Impostazioni filmati",
+        "es": "Ajustes de cinemáticas",
+        "esmx": "Configuración de cinemáticas",
+        "br": "Configurações de cenas",
+        "cz": "Nastavení filmových scén",
+        "hu": "Átvezető jelenet beállítások",
+        "jp": "カットシーン設定",
+        "kr": "컷신 설정",
+        "zh": "過場動畫設定",
+        "cn": "过场动画设置",
+        "tr": "Ara Sahne Ayarları",
+        "ar": "إعدادات المشاهد السينمائية",
+        "ua": "Налаштування кат-сцен",
+    },
+    "Presets": {
+        "en": "Presets",
+        "ru": "Пресеты",
+        "pl": "Presety",
+        "de": "Voreinstellungen",
+        "fr": "Préréglages",
+        "it": "Predefiniti",
+        "es": "Ajustes predefinidos",
+        "esmx": "Valores predeterminados",
+        "br": "Predefinições",
+        "cz": "Předvolby",
+        "hu": "Előbeállítások",
+        "jp": "プリセット",
+        "kr": "사전 설정",
+        "zh": "預設",
+        "cn": "预设",
+        "tr": "Hazır Ayarlar",
+        "ar": "إعدادات مسبقة",
+        "ua": "Пресети",
+    },
+    "ModEnabled": {
+        "en": "Mod Enabled",
+        "ru": "Включить модификацию",
+        "pl": "Włącz mod",
+        "de": "Mod aktivieren",
+        "fr": "Activer le mod",
+        "it": "Abilita mod",
+        "es": "Activar mod",
+        "esmx": "Activar mod",
+        "br": "Ativar mod",
+        "cz": "Povolit modifikaci",
+        "hu": "Mód engedélyezése",
+        "jp": "Modを有効化",
+        "kr": "모드 활성화",
+        "zh": "啟用模組",
+        "cn": "启用模组",
+        "tr": "Modu Etkinleştir",
+        "ar": "تفعيل التعديل",
+        "ua": "Увімкнути модифікацію",
+    },
+    "Dialog_Enabled": {
+        "en": "Enable Dialog Profile",
+        "ru": "Применять профиль диалогов",
+        "pl": "Włącz profil dialogów",
+        "de": "Dialogprofil aktivieren",
+        "fr": "Activer le profil de dialogue",
+        "it": "Abilita profilo dialoghi",
+        "es": "Activar perfil de diálogos",
+        "esmx": "Activar perfil de diálogos",
+        "br": "Ativar perfil de diálogos",
+        "cz": "Aktivovat profil dialogů",
+        "hu": "Párbeszéd profil engedélyezése",
+        "jp": "会話プロファイルを有効化",
+        "kr": "대화 프로필 활성화",
+        "zh": "套用對話設定檔",
+        "cn": "应用对话配置文件",
+        "tr": "Diyalog Profilini Etkinleştir",
+        "ar": "تفعيل ملف تعريف الحوار",
+        "ua": "Застосовувати профіль діалогів",
+    },
+    "Cutscene_Enabled": {
+        "en": "Enable Cutscene Profile",
+        "ru": "Применять профиль кат-сцен",
+        "pl": "Włącz profil przerywników",
+        "de": "Zwischensequenzprofil aktivieren",
+        "fr": "Activer le profil de cinématique",
+        "it": "Abilita profilo filmati",
+        "es": "Activar perfil de cinemáticas",
+        "esmx": "Activar perfil de cinemáticas",
+        "br": "Ativar perfil de cenas",
+        "cz": "Aktivovat profil filmových scén",
+        "hu": "Átvezető jelenet profil engedélyezése",
+        "jp": "カットシーンプロファイルを有効化",
+        "kr": "컷신 프로필 활성화",
+        "zh": "套用過場動畫設定檔",
+        "cn": "应用过场动画配置文件",
+        "tr": "Ara Sahne Profilini Etkinleştir",
+        "ar": "تفعيل ملف تعريف المشاهد السينمائية",
+        "ua": "Застосовувати профіль кат-сцен",
+    },
+    "ShowNotifications": {
+        "en": "Show HUD Notifications",
+        "ru": "Уведомления на экране",
+        "pl": "Powiadomienia na ekranie",
+        "de": "HUD-Benachrichtigungen anzeigen",
+        "fr": "Afficher les notifications ATH",
+        "it": "Mostra notifiche HUD",
+        "es": "Notificaciones en pantalla",
+        "esmx": "Notificaciones en pantalla",
+        "br": "Exibir notificações na tela",
+        "cz": "Zobrazit oznámení na HUD",
+        "hu": "HUD értesítések megjelenítése",
+        "jp": "HUD通知を表示",
+        "kr": "HUD 알림 표시",
+        "zh": "顯示 HUD 通知",
+        "cn": "显示 HUD 通知",
+        "tr": "HUD Bildirimlerini Göster",
+        "ar": "إظهار إشعارات الشاشة",
+        "ua": "Сповіщення на екрані",
+    },
+    "DLSS5_OptiScaler": {
+        "en": "DLSS5 (OptiScaler)",
+        "ru": "DLSS5 (OptiScaler)",
+        "pl": "DLSS5 (OptiScaler)",
+        "de": "DLSS5 (OptiScaler)",
+        "fr": "DLSS5 (OptiScaler)",
+        "it": "DLSS5 (OptiScaler)",
+        "es": "DLSS5 (OptiScaler)",
+        "esmx": "DLSS5 (OptiScaler)",
+        "br": "DLSS5 (OptiScaler)",
+        "cz": "DLSS5 (OptiScaler)",
+        "hu": "DLSS5 (OptiScaler)",
+        "jp": "DLSS5 (OptiScaler)",
+        "kr": "DLSS5 (OptiScaler)",
+        "zh": "DLSS5 (OptiScaler)",
+        "cn": "DLSS5 (OptiScaler)",
+        "tr": "DLSS5 (OptiScaler)",
+        "ar": "DLSS5 (OptiScaler)",
+        "ua": "DLSS5 (OptiScaler)",
+    },
+    "Msg_PTActive": {
+        "en": "[Cutscene PT] Path Tracing Active",
+        "ru": "[Cutscene PT] Трассировка пути активна",
+        "pl": "[Cutscene PT] Path Tracing aktywny",
+        "de": "[Cutscene PT] Path Tracing aktiv",
+        "fr": "[Cutscene PT] Path Tracing activé",
+        "it": "[Cutscene PT] Path Tracing attivo",
+        "es": "[Cutscene PT] Trazado de caminos activo",
+        "esmx": "[Cutscene PT] Trazado de caminos activo",
+        "br": "[Cutscene PT] Traçado de caminhos ativo",
+        "cz": "[Cutscene PT] Path Tracing aktivní",
+        "hu": "[Cutscene PT] Útkövetés aktív",
+        "jp": "[Cutscene PT] パストレーシング有効",
+        "kr": "[Cutscene PT] 패스 트레이싱 적용됨",
+        "zh": "[Cutscene PT] 路徑追蹤已啟用",
+        "cn": "[Cutscene PT] 路径追踪已启用",
+        "tr": "[Cutscene PT] Yol İzleme Etkin",
+        "ar": "[Cutscene PT] تتبع المسار نشط",
+        "ua": "[Cutscene PT] Трасування шляху активне",
+    },
+    "Msg_PTRestored": {
+        "en": "[Cutscene PT] Gameplay Lighting Restored",
+        "ru": "[Cutscene PT] Освещение геймплея восстановлено",
+        "pl": "[Cutscene PT] Przywrócono oświetlenie rozgrywki",
+        "de": "[Cutscene PT] Gameplay-Beleuchtung wiederhergestellt",
+        "fr": "[Cutscene PT] Éclairage du gameplay restauré",
+        "it": "[Cutscene PT] Illuminazione di gioco ripristinata",
+        "es": "[Cutscene PT] Iluminación del juego restaurada",
+        "esmx": "[Cutscene PT] Iluminación del juego restaurada",
+        "br": "[Cutscene PT] Iluminação do jogo restaurada",
+        "cz": "[Cutscene PT] Osvětlení hry obnoveno",
+        "hu": "[Cutscene PT] Játékbeli világítás visszaállítva",
+        "jp": "[Cutscene PT] ゲームプレイの照明を復元",
+        "kr": "[Cutscene PT] 게임플레이 조명 복원됨",
+        "zh": "[Cutscene PT] 已恢復遊戲光源設定",
+        "cn": "[Cutscene PT] 已恢复游戏光照设置",
+        "tr": "[Cutscene PT] Oynanış Aydınlatması Geri Yüklendi",
+        "ar": "[Cutscene PT] تمت استعادة إضاءة أسلوب اللعب",
+        "ua": "[Cutscene PT] Освітлення геймплею відновлено",
+    },
+    "Preset_FullPT": {
+        "en": "Full Path Tracing",
+        "ru": "Полная трассировка пути",
+        "pl": "Pełny Path Tracing",
+        "de": "Vollständiges Path Tracing",
+        "fr": "Path Tracing complet",
+        "it": "Path Tracing completo",
+        "es": "Trazado de caminos completo",
+        "esmx": "Trazado de caminos completo",
+        "br": "Traçado de caminhos completo",
+        "cz": "Plný Path Tracing",
+        "hu": "Teljes útkövetés",
+        "jp": "フル・パストレーシング",
+        "kr": "풀 패스 트레이싱",
+        "zh": "完整路徑追蹤",
+        "cn": "完全路径追踪",
+        "tr": "Tam Yol İzleme",
+        "ar": "تتبع مسار كامل",
+        "ua": "Повне трасування шляху",
+    },
+    "Preset_MinimalPT": {
+        "en": "Minimal Path Tracing",
+        "ru": "Минимальная трассировка пути",
+        "pl": "Minimalny Path Tracing",
+        "de": "Minimales Path Tracing",
+        "fr": "Path Tracing minimal",
+        "it": "Path Tracing minimo",
+        "es": "Trazado de caminos mínimo",
+        "esmx": "Trazado de caminos mínimo",
+        "br": "Traçado de caminhos mínimo",
+        "cz": "Minimální Path Tracing",
+        "hu": "Minimális útkövetés",
+        "jp": "最小パストレーシング",
+        "kr": "최소 패스 트레이싱",
+        "zh": "最低限度路徑追蹤",
+        "cn": "最低限度路径追踪",
+        "tr": "Minimal Yol İzleme",
+        "ar": "الحد الأدنى لتتبع المسار",
+        "ua": "Мінімальне трасування шляху",
+    },
+    "Preset_FullRT": {
+        "en": "Full Ray Tracing",
+        "ru": "Полная трассировка лучей",
+        "pl": "Pełny Ray Tracing",
+        "de": "Vollständiges Ray Tracing",
+        "fr": "Ray Tracing complet",
+        "it": "Ray Tracing completo",
+        "es": "Trazado de rayos completo",
+        "esmx": "Trazado de rayos completo",
+        "br": "Traçado de raios completo",
+        "cz": "Plný Ray Tracing",
+        "hu": "Teljes sugárkövetés",
+        "jp": "フル・レイトレーシング",
+        "kr": "풀 레이 트레이싱",
+        "zh": "完整光線追蹤",
+        "cn": "完全光线追踪",
+        "tr": "Tam Işın İzleme",
+        "ar": "تتبع أشعة كامل",
+        "ua": "Повне трасування променів",
+    },
+}
+
+# (id_offset, target_key, translation_source_key)
+KEY_DEFINITIONS = [
+    (0, "CutscenePT", "CutscenePT"),
+    (1, "panel_CutscenePT", "CutscenePT"),
+    (2, "CutscenePT_General", "CutscenePT_General"),
+    (3, "panel_CutscenePT_General", "CutscenePT_General"),
+    (4, "preset_CutscenePT_General", "Presets"),
+    (5, "Mods.CutscenePT.CutscenePT_General", "CutscenePT_General"),
+    (6, "panel_Mods.CutscenePT.CutscenePT_General", "CutscenePT_General"),
+    (7, "CutscenePT_Dialogs", "CutscenePT_Dialogs"),
+    (8, "panel_CutscenePT_Dialogs", "CutscenePT_Dialogs"),
+    (9, "preset_CutscenePT_Dialogs", "Presets"),
+    (10, "Mods.CutscenePT.CutscenePT_Dialogs", "CutscenePT_Dialogs"),
+    (11, "panel_Mods.CutscenePT.CutscenePT_Dialogs", "CutscenePT_Dialogs"),
+    (12, "CutscenePT_Cutscenes", "CutscenePT_Cutscenes"),
+    (13, "panel_CutscenePT_Cutscenes", "CutscenePT_Cutscenes"),
+    (14, "preset_CutscenePT_Cutscenes", "Presets"),
+    (15, "Mods.CutscenePT.CutscenePT_Cutscenes", "CutscenePT_Cutscenes"),
+    (16, "panel_Mods.CutscenePT.CutscenePT_Cutscenes", "CutscenePT_Cutscenes"),
+    (17, "ModEnabled", "ModEnabled"),
+    (18, "option_ModEnabled", "ModEnabled"),
+    (19, "Dialog_Enabled", "Dialog_Enabled"),
+    (20, "option_Dialog_Enabled", "Dialog_Enabled"),
+    (21, "Cutscene_Enabled", "Cutscene_Enabled"),
+    (22, "option_Cutscene_Enabled", "Cutscene_Enabled"),
+    (27, "ShowNotifications", "ShowNotifications"),
+    (28, "option_ShowNotifications", "ShowNotifications"),
+    (31, "DLSS5_OptiScaler", "DLSS5_OptiScaler"),
+    (32, "option_DLSS5_OptiScaler", "DLSS5_OptiScaler"),
+    (39, "Msg_PTActive", "Msg_PTActive"),
+    (40, "Msg_PTRestored", "Msg_PTRestored"),
+    (41, "preset_Mods_CutscenePT_CutscenePT", "Presets"),
+    (42, "preset_Mods_CutscenePT_CutscenePT_Dialogs", "Presets"),
+    (43, "preset_Mods_CutscenePT_CutscenePT_Cutscenes", "Presets"),
+    (44, "preset_Mods.CutscenePT.CutscenePT_Dialogs", "Presets"),
+    (45, "preset_Mods.CutscenePT.CutscenePT_Cutscenes", "Presets"),
+    (46, "PRESET_VALUE_0", "Preset_FullPT"),
+    (47, "PRESET_VALUE_1", "Preset_MinimalPT"),
+    (48, "PRESET_VALUE_2", "Preset_FullRT"),
+    (49, "PRESET_VALUE_PresetFullPT", "Preset_FullPT"),
+    (50, "PRESET_VALUE_PresetPTGI", "Preset_MinimalPT"),
+    (51, "PRESET_VALUE_PresetFullRT", "Preset_FullRT"),
+    (52, "preset_value_PresetFullPT", "Preset_FullPT"),
+    (53, "preset_value_PresetPTGI", "Preset_MinimalPT"),
+    (54, "preset_value_PresetFullRT", "Preset_FullRT"),
 ]
 
-BASE_ID = 2117592000
+def build():
+    tools_dir = os.path.dirname(os.path.abspath(__file__))
+    mod_root = os.path.dirname(tools_dir)
+    loc_dir = os.path.join(mod_root, "localization")
+    content_dir = os.path.join(mod_root, "content")
+    os.makedirs(loc_dir, exist_ok=True)
+    os.makedirs(content_dir, exist_ok=True)
 
-ALL_LANGS = [
-    "ar", "br", "cn", "cz", "de", "en", "es", "esmx", "fr",
-    "hu", "it", "jp", "kr", "pl", "ru", "tr", "ua", "zh"
-]
+    game_mod_dir = r"D:\Steam\steamapps\common\The Witcher 3\mods\modCutscenePT\content"
+    sync_to_game = os.path.exists(r"D:\Steam\steamapps\common\The Witcher 3\mods\modCutscenePT")
 
-def get_text_for_lang(item, lang):
-    _, _, ru_text, en_text, pl_text, de_text = item
-    if lang == "ru": return ru_text
-    if lang == "pl": return pl_text
-    if lang == "de": return de_text
-    if lang == "ua":
-        if "Кат-сцены" in ru_text: return ru_text.replace("Кат-сцены", "Кат-сцени").replace("трассировка пути", "трасування шляху")
-        if "Настройки диалогов" in ru_text: return "Налаштування діалогів"
-        if "Настройки кат-сцен" in ru_text: return "Налаштування кат-сцен"
-        if "Общие настройки" in ru_text: return "Загальні налаштування"
-        if "Включить модификацию" in ru_text: return "Увімкнути модифікацію"
-        if "Применять профиль диалогов" in ru_text: return "Застосовувати профіль діалогів"
-        if "Применять профиль кат-сцен" in ru_text: return "Застосовувати профіль кат-сцен"
-        if "Генерация кадров" in ru_text: return "Генерація кадрів"
-        if "Как в игре" in ru_text: return "Як у грі"
-        if "Принудительно выкл." in ru_text: return "Примусово вимк."
-        if "Принудительно вкл." in ru_text: return "Примусово увімк."
-        if "Уведомления на экране" in ru_text: return "Сповіщення на екрані"
-        if "Трассировка пути активна" in ru_text: return "[Cutscene PT] Трасування шляху активне"
-        if "Освещение геймплея" in ru_text: return "[Cutscene PT] Освітлення геймплею відновлено"
-        return ru_text
-    return en_text
+    for lang in LANGUAGES:
+        entries = []
+        csv_lines = [f";meta[language={lang}]\n", "; id      |key(hex)|key(str)| text\n"]
 
-tools_dir = os.path.dirname(os.path.abspath(__file__))
-mod_root = os.path.dirname(tools_dir)
-loc_dir = os.path.join(mod_root, "localization")
-content_dir = os.path.join(mod_root, "content")
-os.makedirs(loc_dir, exist_ok=True)
-os.makedirs(content_dir, exist_ok=True)
+        for id_offset, target_key, src_key in KEY_DEFINITIONS:
+            str_id = BASE_STR_ID + id_offset
+            k_hex = hash_key(target_key)
+            k_hex_str = f"{k_hex:08x}"
+            text = TRANSLATIONS[src_key][lang]
 
-for lang in ALL_LANGS:
-    csv_path = os.path.join(loc_dir, f"{lang}.csv")
-    with open(csv_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(f";meta[language={lang}]\n")
-        f.write("; id      |key(hex)|key(str)| text\n")
-        for item in DEFINITIONS:
-            idx = BASE_ID + item[0]
-            kstr = item[1]
-            khex = hash_key(kstr)
-            txt = get_text_for_lang(item, lang)
-            f.write(f"{idx}|{khex}|{kstr}|{txt}\n")
+            entries.append({
+                'id': str_id,
+                'key_hex': k_hex_str,
+                'key_str': target_key,
+                'text': text
+            })
+            csv_lines.append(f"{str_id}|{k_hex_str}|{target_key}|{text}\n")
 
-script_path = os.path.join(tools_dir, "w3strings_nextgen.py")
-for lang in ALL_LANGS:
-    csv_path = os.path.join(loc_dir, f"{lang}.csv")
-    out_w3 = os.path.join(content_dir, f"{lang}.w3strings")
-    cmd = ["python", script_path, "-e", csv_path, "-o", out_w3]
-    subprocess.run(cmd, check=True)
+        # 1. Write CSV
+        csv_path = os.path.join(loc_dir, f"{lang}.csv")
+        with open(csv_path, 'w', encoding='utf-8') as f:
+            f.writelines(csv_lines)
 
-print("All 18 languages compiled successfully!")
+        # 2. Compile w3strings
+        out_w3strings = os.path.join(content_dir, f"{lang}.w3strings")
+        encode_w3strings(entries, lang, out_w3strings)
+
+        # 3. Sync to deployed game directory if available
+        if sync_to_game:
+            game_out = os.path.join(game_mod_dir, f"{lang}.w3strings")
+            with open(out_w3strings, 'rb') as src, open(game_out, 'wb') as dst:
+                dst.write(src.read())
+
+    print(f"Successfully generated genuine translations for all {len(LANGUAGES)} languages!")
+
+if __name__ == '__main__':
+    build()
