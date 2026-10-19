@@ -57,3 +57,29 @@ The mod dynamically switches ray tracing / path tracing settings in *The Witcher
 5. **Packaging:**
    - Always archive releases following the exact structure and filename specified in [.agents/packaging.md](packaging.md).
    - Use `python tools/package.py` to create the release archive.
+
+6. **Rule of Truth & Fact Verification (CRITICAL):**
+   - The assistant must never make assumptions or claim that a technology, feature, version, or fact does not exist simply because it is unfamiliar or beyond its static training data.
+   - If the assistant doubts the existence, accuracy, or state of any information (e.g. newer hardware/software releases, versions, APIs), it is **strictly required to search and verify** the information before making statements or drawing conclusions.
+
+7. **Rule of Absolute Instruction Compliance (CRITICAL):**
+   - The assistant must adhere strictly and unconditionally to user instructions regarding tools, models, workflows, and subagent configurations.
+   - When the user specifies a specific model for a subagent (such as `flash_lite`), the assistant must use that exact model without deviation or arbitrary substitution.
+
+8. **User/Player Communication Rule (No Markdown & No Tech Explanations):**
+   - When drafting messages or replies for players/end users (Nexus Mods comments, direct messages, forum posts):
+     - **NO MARKDOWN:** Output strictly plain raw text. Do not use code blocks (` ``` `), bold/italic (`**`, `*`), headers (`#`), bullet asterisks, or inline backticks (` ` `). The text must be immediately ready for copy-pasting into text boxes without showing raw markdown syntax.
+     - **NO TECHNICAL EXPLANATIONS:** Avoid developer jargon, internal code mechanics, memory offsets, assembly instructions, or architecture details. Formulate answers strictly from a player's perspective: simple, friendly, practical instructions focusing only on settings to toggle, menu options, or files to update.
+
+9. **Git Commit Standards (Conventional Commits Only):**
+   - All git commit messages must strictly follow the **Conventional Commits** specification:
+     ```
+     <type>[optional scope]: <description>
+     ```
+   - Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`.
+   - Examples:
+     - `feat(plugin): support winmm, version, dbghelp and other proxy DLLs in OptiScaler scanner`
+     - `fix(scripts): resolve dlssnr variable reference in logger`
+     - `chore(release): bump version to 1.33`
+   - Never use unstructured, generic, or non-conventional commit messages.
+

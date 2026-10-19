@@ -29,7 +29,7 @@ struct SCutscenePTProfile
 
 function GetCutscenePTVersion() : string
 {
-	return "1.32";
+	return "1.33";
 }
 
 class CutscenePTOptions

@@ -68,3 +68,23 @@ Before committing changes:
 2. Verify that lingering compiler processes are stopped.
 3. Verify that `tools/build_localization.py` and `tools/package.py` execute cleanly.
 4. Ensure no machine-specific absolute paths or temporary build artifacts are committed.
+
+---
+
+## 6. Git Commit Standards (Conventional Commits Only)
+
+All git commit messages must strictly adhere to the **Conventional Commits** format:
+```
+<type>[optional scope]: <description>
+```
+
+- **Allowed Types:**
+  - `feat`: A new feature or capability (e.g. `feat(plugin): support winmm, version, dbghelp proxy DLLs`)
+  - `fix`: A bug fix (e.g. `fix(scanner): correct offset boundary check`)
+  - `docs`: Documentation updates (e.g. `docs(agents): add conventional commits rule`)
+  - `refactor`: Code changes that neither fix a bug nor add a feature
+  - `perf`: Performance improvements
+  - `chore`: Maintenance, version bumps, or tooling tasks (e.g. `chore(release): bump version to 1.33`)
+  - `build`: Changes affecting build scripts or external dependencies
+- Never commit with unstructured, generic, or non-conventional messages.
+
